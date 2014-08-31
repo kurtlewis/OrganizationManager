@@ -6,9 +6,12 @@ _ = require("underscore")
 lookupService = require("../services/memberLookup")
 exports.getMembers = (req, res) ->
   Member.find (err, members) ->
-    res.render "member/list",
-      title: "Members"
-      members: members
+    if req.get('Content-Type') is 'application/json'
+      res.json members
+    else
+      res.render "member/list",
+        title: "Members"
+        members: members
 
     return
 
