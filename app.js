@@ -161,6 +161,7 @@ app.get('/event/add',passportConf.isAuthenticated, eventController.addEvent);
 app.post('/event/add', passportConf.isAuthenticated, eventController.postEvent);
 app.get('/event/:id', eventController.getEvent);
 app.post('/event/:id', eventController.postUpdate);
+app.get('/event/:id/edit', passportConf.isAuthenticated, eventController.editEvent);
 app.del('/event/:id', passportConf.isAuthenticated, eventController.deleteEvent);
 app.get('/event/:id/:mnum/deny', passportConf.isAuthenticated, eventController.denyAttendance)
 app.get('/event/:id/:mnum', passportConf.isAuthenticated, eventController.postConfirmation);
@@ -194,6 +195,9 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/glass.timeline', accessType: 'offline'}));
 app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
 
+app.get('/virtual', function(req, res) {
+  res.render('virtual');
+})
 /**
  * Start Express server.
  */
