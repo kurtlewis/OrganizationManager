@@ -40,6 +40,7 @@ exports.resetData = function(req, res) {
   Member.find({}, function(err, members) {
     members.forEach(function(member) {
       member.events = [];
+      member.meetings = 0;
       member.save();
     })
   });
