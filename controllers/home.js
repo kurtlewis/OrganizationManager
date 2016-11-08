@@ -7,7 +7,8 @@ var Meeting = require('../models/Meeting');
 var async = require('async');
 
 exports.index = function(req, res) {
-  var start = new Date();
+  var start = new Date(new Date().getTime() - (4 * 60 * 60 * 1000));
+  console.log(start);
   var end = new Date(+new Date + 6048e5);
   console.log(end);
 
