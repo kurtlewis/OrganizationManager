@@ -1,5 +1,5 @@
 module.exports = {
-    db: 'mongodb://',
+    db: process.env.DATABASE,
 
   sessionSecret: "Your Session Secret goes here",
 
