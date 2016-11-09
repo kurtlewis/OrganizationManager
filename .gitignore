@@ -25,3 +25,4 @@ public/css/styles.css
 buildAssets
 
 config/secrets.js
+.env
