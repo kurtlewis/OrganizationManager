@@ -1,5 +1,5 @@
 module.exports = {
-    db: process.env.DATABASE,
+    db: process.env.MONGO_URL,
 
   sessionSecret: "Your Session Secret goes here",
 

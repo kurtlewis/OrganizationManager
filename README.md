@@ -11,7 +11,7 @@ Basic setup:
 ```
 # On host machine, after dokku has been installed, and configured with your ssh key
 $dokku apps:create ambassadors
-$dokku config:set ambassadors DATABASE=[YOUR DATABASE STRING HERE]
+$dokku config:set ambassadors MONGO_URL=[YOUR DATABASE STRING HERE]
 # See all the useful tools dokku has to offer
 $dokku help
 
