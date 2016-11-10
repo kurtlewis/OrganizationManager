@@ -11,7 +11,10 @@ Basic setup:
 ```
 # On host machine, after dokku has been installed, and configured with your ssh key
 $dokku apps:create ambassadors
-$dokku config:set ambassadors MONGO_URL=[YOUR DATABASE STRING HERE]
+# Install mongoDB Dokku plugin
+$sudo dokku plugin:install https://github.com/dokku/dokku-mongo.git mongo
+$dokku mongo:create ambassadorsDB
+$dokku mongo:link ambassadorsDB ambassadors
 # See all the useful tools dokku has to offer
 $dokku help
 
