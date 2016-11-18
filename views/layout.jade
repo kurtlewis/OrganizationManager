@@ -1,0 +1,24 @@
+mixin dateRow(day)
+  td
+    span(style="display:none") #{moment(day).format('YYYYMMDD')}
+    | #{moment(day).format('LLLL')}
+
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js")
+    title #{title} | CEAS Ambassadors
+    != css('styles')
+    != js('application')
+  body
+    #wrap
+      include partials/navigation
+      .container
+        include partials/flash
+        block content
+    include partials/footer

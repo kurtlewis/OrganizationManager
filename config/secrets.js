@@ -1,5 +1,5 @@
 module.exports = {
-    db: 'mongodb://jonah:password@ds033599.mongolab.com:33599/ceas',
+    db: process.env.MONGO_URL,
 
   sessionSecret: "Your Session Secret goes here",
 

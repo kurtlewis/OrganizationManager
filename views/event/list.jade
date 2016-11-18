@@ -5,6 +5,7 @@ block content
     h3 Event List
   if user
     a(class="btn btn-primary" role="button" href="/event/add") Add New Event
+  //.table-responsive
   table(class="table")
     thead
       tr
@@ -15,6 +16,7 @@ block content
        th Summary
        th Details
        if user
+         th Edit
          th Delete
     tbody
       each event in events
@@ -27,6 +29,8 @@ block content
           td
             a(href="/event/#{event.id}") View
           if user
+            td
+              a(href="/event/#{event.id}/edit") Edit
             td
               span(class="glyphicon glyphicon-trash", onclick="del('#{event.id}', '#{event.title}')")
 

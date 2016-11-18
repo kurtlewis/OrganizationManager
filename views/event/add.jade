@@ -2,33 +2,41 @@ extends ../layout
 
 block content
 
-  form.form-horizontal(id='signup-form', method='POST')
+  form.form-horizontal(id='signup-form', method='POST', action='/event/add')
     input(type='hidden', name='_csrf', value=token)
-    legend Add New Event
+    input(type='hidden', name='isEdit', value="#{isEdit}")
+    input(type='hidden', name='eventID', value="#{event._id}")
+    if isEdit
+        legend Edit Event
+    else
+        legend Add New Event
     .form-group
       label.col-sm-3.control-label(for='email') Event Title
       .col-sm-7.input_group
-        input.form-control(class="form_datetime", type='text', name='title', id='title', placeholder='Organization Event', autofocus)
+        input.form-control(class="form_datetime", value="#{event.title}", type='text', name='title', id='title', placeholder='Organization Event', autofocus)
     .form-group
       label.col-sm-3.control-label(for='email') Starting Date/Time
       .col-sm-7.input_group
-        input.form-control(class="form_datetime", type='text', name='starttime', id='starttime', placeholder='31 December 1999 12:00 PM', autofocus)
+        input.form-control(class="form_datetime", value="#{event.starttime}", type='text', name='starttime', id='starttime', placeholder='31 December 1999 12:00 PM', autofocus)
     .form-group
       label.col-sm-3.control-label(for='email') Ending Date/Time
       .col-sm-7.input_group
-        input.form-control(class="form_datetime", type='text', name='endtime', id='endtime', placeholder='31 December 1999 12:00 PM ', autofocus)
+        input.form-control(class="form_datetime", value="#{event.endtime}",type='text', name='endtime', id='endtime', placeholder='31 December 1999 12:00 PM ', autofocus)
     .form-group
       label.col-sm-3.control-label(for='location') Location
       .col-sm-7
-        input.form-control(type='text', name='location', id='location', placeholder='407 ERC')
+        input.form-control(type='text', value="#{event.location}", name='location', id='location', placeholder='407 ERC')
     .form-group
       label.col-sm-3.control-label(for='summary') Summary
       .col-sm-7
-        input.form-control(type='text', name='summary', id='summary', placeholder='Lorem Ipsum')
+        input.form-control(type='text', value="#{event.summary}", name='summary', id='summary', placeholder='Lorem Ipsum')
     .form-group
       .col-sm-offset-3.col-sm-7
         button.btn.btn-success(type='submit')
           i.fa.fa-check
-          | Add Event
+          if isEdit
+            | Save Event
+          else
+            | Add Event
   link(rel='stylesheet', href='/css/bootstrap-datepicker.css')
   script(type='text/javascript', src='/js/bootstrap-datepicker.js')
