@@ -196,7 +196,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: 'profile email 
 app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.get('/virtual', function(req, res) {
-  res.render('virtual');
+  res.render('virtual', {title: "Virtual Tour"});
 })
 /**
  * Start Express server.
