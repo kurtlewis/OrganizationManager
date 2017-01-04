@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-
+require('dotenv').config();
 
 var express = require('express');
 var MongoStore = require('connect-mongo')(express);
