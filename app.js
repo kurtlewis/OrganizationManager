@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 
+
 var express = require('express');
 var MongoStore = require('connect-mongo')(express);
 var flash = require('express-flash');
@@ -99,7 +100,7 @@ app.use(express.methodOverride());
 app.use(express.session({
   secret: secrets.sessionSecret,
   store: new MongoStore({
-    url: secrets.db,
+    db: mongoose.connection.db,
     auto_reconnect: true
   }, function(e) {
     app.listen(app.get('port'), function() {
