@@ -100,15 +100,15 @@ app.use(express.methodOverride());
 app.use(express.session({
   secret: secrets.sessionSecret,
   store: new MongoStore({
-    db: mongoose.connection.db,
+    url: process.env.MONGO_URL,
     auto_reconnect: true
-  }, function(e) {
-    app.listen(app.get('port'), function() {
-      console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
-    });
+  }, function(e) {    
     app.isReady = true;
   })
 }));
+app.listen(app.get('port'), function() {
+  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
+});
 app.use(express.csrf());
 app.use(passport.initialize());
 app.use(passport.session());
