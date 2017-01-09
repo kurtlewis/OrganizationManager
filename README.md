@@ -21,4 +21,10 @@ $dokku help
 # On your machine
 $git remote add dokku dokku@[serverip] #Only needs run once
 $git push dokku [branch]:master #If pushing master branch, just use $git push dokku master
+
+
+# Creating backups of mongoDB on Dokku
+$dokku mongo:export ambassadorsDB > mybackupname.dump.tar
+# Importing backups:
+$dokku mongo:import ambassadorsDB < mybackupname.dump.tar
 ```
