@@ -21,6 +21,7 @@ block content
       tr
        th First
        th Last
+       th Major
        if user
          th Confirm Attendance
          th No Show
@@ -29,6 +30,7 @@ block content
         tr
           td=member.profile.firstName
           td=member.profile.lastName
+          td=member.profile.major
           if user
             td
               a(href="/event/" + event.id + '/' + member.profile.mnum)
