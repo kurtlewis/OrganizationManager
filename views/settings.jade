@@ -28,26 +28,27 @@ block content
         button.btn.btn-success(type='submit')
           i.fa.fa-check
           | Save
-  legend Danger Zone
-  button.btn.btn-danger(type='submit', id="resetButton")
-    i.fa.fa-times
-    | Reset Hours, Meetings, and Events
+  if showDangerZone == "YES"
+    legend Danger Zone
+    button.btn.btn-danger(type='submit', id="resetButton")
+      i.fa.fa-times
+      | Reset Hours, Meetings, and Events
 
-  script.
-    $(function() {
-      $('#resetButton').on('click', function() {
-          if(confirm("Are you sure you want to reset the system? This CANNOT be undone.")) {
+    script.
+      $(function() {
+        $('#resetButton').on('click', function() {
+            if(confirm("Are you sure you want to reset the system? This CANNOT be undone.")) {
 
-            $.ajax({
-                url: '/reset/',
-                type: 'POST',
-                data: {
-                  _csrf:'#{token}'
-                },
-                success: $.noop,
-                error: $.noop
-            });
-          }
+              $.ajax({
+                  url: '/reset/',
+                  type: 'POST',
+                  data: {
+                    _csrf:'#{token}'
+                  },
+                  success: $.noop,
+                  error: $.noop
+              });
+            }
 
-      })
-    });
+        })
+      });

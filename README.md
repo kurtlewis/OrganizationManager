@@ -17,6 +17,9 @@ $dokku mongo:create ambassadorsDB
 $dokku mongo:link ambassadorsDB ambassadors
 # See all the useful tools dokku has to offer
 $dokku help
+# Configure the dokku instance
+$dokku config:set ambassadors ADMIN_MODE=NO
+
 
 # On your machine
 $git remote add dokku dokku@[serverip] #Only needs run once
@@ -28,3 +31,8 @@ $dokku mongo:export ambassadorsDB > mybackupname.dump.tar
 # Importing backups:
 $dokku mongo:import ambassadorsDB < mybackupname.dump.tar
 ```
+
+## Other Notes
+
+### Admin Mode
+To improve security of the deployed application, accounts can only be created when admin mode is turned on. Likewise, the website can only be reset for a new semester when admin mode is turned on. This makes it so that arbitrary 3rd parties cannot create accounts, and users with accounts can not maliciously or accidentally reset the website. To turn on admin mode, you must have access to the server. Appropriate values for the ADMIN_MODE environment variable are `YES` and `NO`. If admin mode is not set, or is set incorrectly, it will be off.

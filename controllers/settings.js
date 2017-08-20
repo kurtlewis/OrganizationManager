@@ -13,7 +13,8 @@ exports.getSettings = function(req, res) {
       settings = new Settings();
     res.render('settings', {
       title: req.app.locals.organization,
-      settings: settings
+      settings: settings,
+      showDangerZone: process.env.ADMIN_MODE
     });
   });
 }
@@ -35,6 +36,11 @@ exports.postSettings = function(req, res) {
 }
 
 exports.resetData = function(req, res) {
+  // If admin mode is not on return 403
+  if (!process.env.ADMIN_MODE != "YES") {
+    res.send(403);
+    return;
+  }
   res.send(200);
 
   Member.find({}, function(err, members) {
