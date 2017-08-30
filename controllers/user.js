@@ -63,7 +63,7 @@ exports.logout = function(req, res) {
  */
 
 exports.getSignup = function(req, res) {
-  if (process.env.ADMIN_MODE == 'YES') {
+  if (process.env.ADMIN_MODE === 'YES') {
     res.render('account/signup', {
       title: 'Create Account'
     });
@@ -82,7 +82,7 @@ exports.getSignup = function(req, res) {
 
 exports.postSignup = function(req, res, next) {
   // disallow creation of the account unless admin mode is enabled
-  if (!process.env.ADMIN_MODE != "YES") {
+  if (!process.env.ADMIN_MODE !== "YES") {
     res.send(403);
     return;
   }

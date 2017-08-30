@@ -37,7 +37,7 @@ exports.postSettings = function(req, res) {
 
 exports.resetData = function(req, res) {
   // If admin mode is not on return 403
-  if (!process.env.ADMIN_MODE != "YES") {
+  if (!process.env.ADMIN_MODE !== "YES") {
     res.send(403);
     return;
   }
