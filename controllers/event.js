@@ -152,6 +152,8 @@ exports.postUpdate = function(req, res) {
   var id = req.params.id;
   var mnum = req.body.mnum;
 
+  mnum = mnum.toUpperCase();
+
   Event.findOne({_id:id}, function(err, event) {
     event.attendees.push(mnum);
     event.save();

@@ -58,6 +58,8 @@ exports.postMNum = function(req, res) {
   var mnum = req.body.mnum;
   var errorOccurred = false;
 
+  mnum = mnum.toUpperCase();
+
   Member.findOne({ 'profile.mnum': mnum }, function (err, member) {
     if (member) {
       Meeting.findById(id, function (err, meeting) {
