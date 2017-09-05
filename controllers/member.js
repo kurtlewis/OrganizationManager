@@ -88,3 +88,14 @@ exports.getAddMember = function(req, res) {
     title: "Add New Member"
   })
 }
+
+
+exports.renderCheckHours = function(req, res) {
+  res.render('checkhours', {
+    title: "Check Member Hours"
+  })
+}
+
+exports.getHours = function(req, res) {
+  res.send(404);
+}

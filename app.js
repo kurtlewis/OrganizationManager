@@ -150,6 +150,8 @@ app.get('/member/:id', passportConf.isAuthenticated, memberController.getMember)
 app.post('/member/:id', passportConf.isAuthenticated, memberController.addEvent)
 app.del('/member/:id', passportConf.isAuthenticated, memberController.deleteMember);
 
+app.get('/checkhours', memberController.renderCheckHours);
+app.post('/checkhours', memberController.getHours);
 
 app.get('/meeting', meetingController.getMeeting);
 app.get('/meeting/add', passportConf.isAuthenticated, meetingController.getAddMeeting);
