@@ -97,5 +97,25 @@ exports.renderCheckHours = function(req, res) {
 }
 
 exports.getHours = function(req, res) {
-  res.send(404);
+  const mnum = req.body.mnum
+  
+  if (mnum) {
+    Member.findOne({"profile.mnum": mnum}, function(err, member) {
+      if (member) {
+        res.render('checkhours', {
+          title: "Check Member Hours",
+          member: member
+        })
+      }
+      else {
+        console.log('Member not found.')
+      }
+    })
+  }
+  else {
+  console.log("We don't get this far" + mnum)
+  res.render('checkhours', {
+    title: "Check Member Hours"
+  })
+  }
 }

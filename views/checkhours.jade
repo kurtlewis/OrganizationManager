@@ -3,7 +3,7 @@ extends ./layout
 block content
   h3 Check hours for MNumber
   h4
-    form.form-horizontal(id="signIn", role='form', method='POST')
+    form.form-horizontal(id="checkhours", role='form', method='POST')
       input(type='hidden', name='_csrf', value=token)
       .form-group
         label(class='col-sm-2 control-label', for='mnum') M#
@@ -13,4 +13,24 @@ block content
         .col-sm-offset-2.col-sm-7
           button.btn.btn-success(type='submit')
             i.fa.fa-check
-            | Check Hours       
+            | Check Hours
+
+  if locals.member
+    h3 Member: #{member.profile.firstName} #{member.profile.lastName}
+    h5 Total minutes of service: 
+      label(id="serviceMinutes") #{member.service}
+    h5 Meetings attended: 
+      label(id="meetings") #{member.meetings}
+    h3 Service Events
+    table(class="table")
+      thead
+        tr
+        th Title
+        th Start Time
+        th End Time
+      tbody
+        each event in member.events
+          tr
+            td=event.title
+            td=moment(event.starttime).format('LLLL')
+            td=moment(event.endtime).format('LLLL')
