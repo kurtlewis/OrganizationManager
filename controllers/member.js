@@ -97,7 +97,7 @@ exports.renderCheckHours = function(req, res) {
 }
 
 exports.getHours = function(req, res) {
-  const mnum = req.body.mnum
+  const mnum = req.body.mnum.toUpperCase()
 
   Member.findOne({"profile.mnum": mnum}, function(err, member) {
     if (member) {
