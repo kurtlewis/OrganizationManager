@@ -88,3 +88,33 @@ exports.getAddMember = function(req, res) {
     title: "Add New Member"
   })
 }
+
+
+exports.renderCheckHours = function(req, res) {
+  res.render('checkhours', {
+    title: "Check Member Hours"
+  })
+}
+
+exports.getHours = function(req, res) {
+  const mnum = req.body.mnum
+
+  Member.findOne({"profile.mnum": mnum}, function(err, member) {
+    if (member) {
+      res.render('checkhours', {
+        title: "Check Member Hours",
+        member: member
+      })
+    }
+    else {
+      res.render('checkhours', {
+        title: "Check Member Hours",
+        messages: {
+          errors: [{
+            msg: "MNumber lookup failed"
+          }]
+        }
+      })
+    }
+  })
+}
