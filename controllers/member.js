@@ -79,7 +79,12 @@ exports.deleteMember = function(req, res) {
   console.log("deleting : " + req.params.id);
   var mnum = req.params.id;
   Member.remove({"profile.mnum": mnum}, function(err) {
-    console.log(err);
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      res.send(200);
+    }
   });
 }
 
@@ -107,7 +112,7 @@ exports.getHours = function(req, res) {
       })
     }
     else {
-      res.render('checkhours', {
+      res.status(400).render('checkhours', {
         title: "Check Member Hours",
         messages: {
           errors: [{

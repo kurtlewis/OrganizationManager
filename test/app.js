@@ -5,6 +5,7 @@ var assert = require('chai').assert
 
 var Event = require('../models/Event');
 var Meeting = require('../models/Meeting');
+var Member = require('../models/Member')
 
 var csrf = "";
 
@@ -80,6 +81,38 @@ describe('Member CRUD tests', function() {
       .send({_csrf: csrf, mnum:'M04297884', email: 'backjo@mail.uc.edu', firstName: 'Jonah', lastName: 'Back', major: 'Computer Science'})
       .expect(302, done);
   });
+
+  it('should render member page', function(done) {
+    server
+      .get('/member/M04297884')
+      .expect(200, done);
+  });
+
+  it('should return check hours page', function(done) {
+    server
+      .get('/checkhours')
+      .expect(200, done);
+  });
+
+  it('should check hours for member', function(done) {
+    server
+      .post('/checkhours')
+      .send({_csrf: csrf, mnum:'M04297884'})
+      .expect(200, done);
+  })
+
+  it('should delete member', function(done) {
+    server
+      .del('/member/M04297884')
+      .send({_csrf:csrf})
+      .end(function(err, res) {
+        Member.findOne({"profile.mnum":"M04297884"}, function(err, member) {
+          if(err || member)
+            return done(err);
+          done();
+        })
+      })
+  })
 });
 
 describe('Event CRUD tests', function() {
