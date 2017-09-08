@@ -97,7 +97,6 @@ exports.postSignup = function(req, res, next) {
     return res.redirect('/signup');
   }
 
-  console.log(req.body);
 
   var user = new User({
     email: req.body.email,
