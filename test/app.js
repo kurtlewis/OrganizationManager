@@ -156,26 +156,27 @@ describe('Meeting CRUD tests', function() {
 
   });
 
-  it('Should sign into meeting using cardswipe', function(done) {
-    var ISO = "6015899400214891";
-    var mnum = "M04297884";
+  // card swip signin is deprecated
+  // it('Should sign into meeting using cardswipe', function(done) {
+  //   var ISO = "6015899400214891";
+  //   var mnum = "M04297884";
 
-    server
-      .post('/meeting/' + meetingID)
-      .send({
-        _csrf: csrf,
-        iso: ISO
-      })
-      .end(function(err, res) {
-        Meeting.findOne({"_id":meetingID}, function(err, meeting) {
-          if(!meeting || err)
-            return done(err);
-          assert.lengthOf(meeting.attendees,1,'Should be one attendee');
-          assert.equal(meeting.attendees[0], mnum, "Attendee should be swiper");
-          done();
-        })
-      })
-  });
+  //   server
+  //     .post('/meeting/' + meetingID)
+  //     .send({
+  //       _csrf: csrf,
+  //       iso: ISO
+  //     })
+  //     .end(function(err, res) {
+  //       Meeting.findOne({"_id":meetingID}, function(err, meeting) {
+  //         if(!meeting || err)
+  //           return done(err);
+  //         assert.lengthOf(meeting.attendees,1,'Should be one attendee');
+  //         assert.equal(meeting.attendees[0], mnum, "Attendee should be swiper");
+  //         done();
+  //       })
+  //     })
+  // });
 
   it('Should delete meeting', function(done) {
     Meeting.remove({"_id":meetingID}, function(err, meeting) {
