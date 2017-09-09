@@ -8,7 +8,7 @@ var Meeting = require('../models/Meeting');
 var Member = require('../models/Member')
 
 var csrf = "";
-
+var mnum = "M04297884";
 
 describe('GET /', function() {
 
@@ -84,13 +84,13 @@ describe('Member CRUD (minus delete) tests', function() {
   it('should add a new member', function(done) {
     server
       .post('/member/add')
-      .send({_csrf: csrf, mnum:'M04297884', email: 'backjo@mail.uc.edu', firstName: 'Jonah', lastName: 'Back', major: 'Computer Science'})
+      .send({_csrf: csrf, mnum: mnum, email: 'backjo@mail.uc.edu', firstName: 'Jonah', lastName: 'Back', major: 'Computer Science'})
       .expect(302, done);
   });
 
   it('should render member page', function(done) {
     server
-      .get('/member/M04297884')
+      .get('/member/' + mnum)
       .expect(200, done);
   });
 
@@ -109,16 +109,16 @@ describe('Member CRUD (minus delete) tests', function() {
   it('should check hours for member', function(done) {
     server
       .post('/checkhours')
-      .send({_csrf: csrf, mnum:'M04297884'})
+      .send({_csrf: csrf, mnum: mnum})
       .expect(200, done);
   })
 
   it('should delete member', function(done) {
     server
-      .del('/member/M04297884')
+      .del('/member/' + mnum)
       .send({_csrf:csrf})
       .end(function(err, res) {
-        Member.findOne({"profile.mnum":"M04297884"}, function(err, member) {
+        Member.findOne({"profile.mnum": mnum}, function(err, member) {
           if(err || member)
             return done(err);
           done();
@@ -234,10 +234,10 @@ describe('Meeting CRUD tests', function() {
 describe('Delete test member', function() {
   it('should delete member', function(done) {
     server
-      .del('/member/M04297884')
+      .del('/member/' + mnum)
       .send({_csrf:csrf})
       .end(function(err, res) {
-        Member.findOne({"profile.mnum":"M04297884"}, function(err, member) {
+        Member.findOne({"profile.mnum": mnum}, function(err, member) {
           if(err || member)
             return done(err);
           done();
