@@ -26,6 +26,7 @@ exports.getEvent = function(req, res) {
 	console.log("err was:" + err);
       }
       else {
+        // This code duplicated below in postUpdate, for better or worse
         async.parallel([
           function(callback){
               Member.find({'profile.mnum': {$in: event.attendees }}, function(err, members) {
@@ -155,14 +156,54 @@ exports.postUpdate = function(req, res) {
   mnum = mnum.toUpperCase();
 
   Event.findOne({_id:id}, function(err, event) {
-    event.attendees.push(mnum);
-    event.save();
-  });
-
-
-  res.redirect('/event/' + id);
+    if (!err) {
+      Member.findOne({'profile.mnum':mnum}, function(err, member) {
+        if (!err && member) {
+          event.attendees.push(mnum);
+          event.save();
+          res.redirect('/event/' + id);
+        } else {
+          // This code duplicated above in getEvent, for better or worse
+          async.parallel([
+            function(callback){
+                Member.find({'profile.mnum': {$in: event.attendees }}, function(err, members) {
+  
+                  callback(null, members);
+                });
+            },
+            function(callback){
+                Member.find({'profile.mnum': {$in: event.confirmed }}, function(err, members) {
+  
+                  callback(null, members);
+                });
+            }
+          ],function(err, results){
+            // the results array will equal ['one','two'] even though
+            // the second function had a shorter timeout.
+            res.status(400).render('event/detail', {
+              title: "Register for Event",
+              event: event,
+              messages: {
+                errors: [{
+                  msg: "MNumber not found."
+                }]
+              },
+              members: results[0],
+              confirmed: results[1]
+            });
+          });
+        }
+      })
+    } else {
+      // Error looking up the event. This shouldn't happen
+      res.render(404);
+    }
+    
+  }); 
 
 }
+
+
 
 exports.denyAttendance = function(req, res) {
   var id = req.params.id;
