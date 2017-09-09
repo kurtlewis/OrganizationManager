@@ -74,7 +74,7 @@ describe('Authentication', function() {
   })
 });
 
-describe('Member CRUD tests', function() {
+describe('Member CRUD (minus delete) tests', function() {
   it('should add a new member', function(done) {
     server
       .post('/member/add')
@@ -217,7 +217,19 @@ describe('Meeting CRUD tests', function() {
       done();
     });
   })
+});
 
-
-
+describe('Delete test member', function() {
+  it('should delete member', function(done) {
+    server
+      .del('/member/M04297884')
+      .send({_csrf:csrf})
+      .end(function(err, res) {
+        Member.findOne({"profile.mnum":"M04297884"}, function(err, member) {
+          if(err || member)
+            return done(err);
+          done();
+        })
+      })
+  })
 });
