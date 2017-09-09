@@ -6,6 +6,7 @@ var assert = require('chai').assert
 var Event = require('../models/Event');
 var Meeting = require('../models/Meeting');
 var Member = require('../models/Member')
+var User = require('../models/User')
 
 var csrf = "";
 var mnum = "M04297884";
@@ -111,19 +112,6 @@ describe('Member CRUD (minus delete) tests', function() {
       .post('/checkhours')
       .send({_csrf: csrf, mnum: mnum})
       .expect(200, done);
-  })
-
-  it('should delete member', function(done) {
-    server
-      .del('/member/' + mnum)
-      .send({_csrf:csrf})
-      .end(function(err, res) {
-        Member.findOne({"profile.mnum": mnum}, function(err, member) {
-          if(err || member)
-            return done(err);
-          done();
-        })
-      })
   })
 });
 
@@ -231,8 +219,8 @@ describe('Meeting CRUD tests', function() {
   })
 });
 
-describe('Delete test member', function() {
-  it('should delete member', function(done) {
+describe('Do test clean up', function() {
+  it('should delete test member', function(done) {
     server
       .del('/member/' + mnum)
       .send({_csrf:csrf})
@@ -243,5 +231,16 @@ describe('Delete test member', function() {
           done();
         })
       })
+  })
+
+  // This test doesn't really accomplish a whole lot, but it's necessary to clean up after ourselves
+  it('Should remove created test user', function(done) {
+    User.remove({email:'backjo@mail.uc.edu'}, function(err) {
+      if (!err) {
+        done();
+      } else {
+        return done(err);
+      }
+    })
   })
 });
