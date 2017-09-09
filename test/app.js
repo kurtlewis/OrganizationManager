@@ -75,6 +75,12 @@ describe('Authentication', function() {
 });
 
 describe('Member CRUD (minus delete) tests', function() {
+  it('should render member add page', function(done) {
+    server
+      .get('/member/add')
+      .expect(200, done);
+  })
+
   it('should add a new member', function(done) {
     server
       .post('/member/add')
@@ -87,6 +93,12 @@ describe('Member CRUD (minus delete) tests', function() {
       .get('/member/M04297884')
       .expect(200, done);
   });
+
+  it('should render member list page', function(done) {
+    server
+      .get('/member')
+      .expect(200, done);
+  })
 
   it('should return check hours page', function(done) {
     server
