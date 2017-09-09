@@ -142,9 +142,40 @@ describe('Event CRUD tests', function() {
           done();
         })
       })
-
   });
 
+  it('should signup member for event', function(done) {
+    server
+      .post('/event/' + eventID)
+      .send({
+        _csrf:csrf,
+        mnum: mnum
+      })
+      .expect(302, done)
+  })
+
+  it('should return error for event signup', function(done) {
+    server
+      .post('/event/' + eventID)
+      .send({
+        _csrf:csrf,
+        mnum: 'M0BADMNUM'
+      })
+      .expect(400, done)
+  })
+
+  // it('should deny attendance for member', function(done) {
+  //   server
+  //     .post('/event/' + eventID + '/' + mnum + '/deny')
+  //     .send({_csrf:csrf})
+  //     .expect(302, done)
+  // })
+
+  it('should confirm attendance for member', function(done) {
+    server
+      .get('/event/'+ eventID + '/' + mnum)
+      .expect(302, done);
+  })
 
   it('should DELETE event', function(done) {
     server
