@@ -26,6 +26,7 @@ exports.getEvent = function(req, res) {
 	console.log("err was:" + err);
       }
       else {
+        // This code duplicated below in postUpdate, for better or worse
         async.parallel([
           function(callback){
               Member.find({'profile.mnum': {$in: event.attendees }}, function(err, members) {
@@ -116,33 +117,36 @@ exports.postEvent = function(req,res) {
     });
     newEvent.save();
 
-    Settings.findOne({}, function (err, setting) {
-      console.log("Setting calendar key");
-      console.log(err);
-      if (setting) {
-        setting.getAccessToken(function (accessToken) {
-          google_calendar = new gcal.GoogleCalendar(accessToken);
-          console.log(accessToken);
-          google_calendar.calendarList.list(function (err, calendarList) {
-            var params = {
-              start: {
-                dateTime: moment(req.body.starttime).format()
-              },
-              end: {
-                dateTime: moment(req.body.endtime).format()
-              },
-              summary: req.body.title,
-              description: req.body.summary
-            };
-            google_calendar.events.insert(calendarList.items[0].id, params, function (err, calEvent) {
-              console.log(calEvent.id)
-              newEvent.googleID = calEvent.id;
-              newEvent.save();
-            });
-          });
-        })
-      }
-    })
+    //
+    // We don't actually use the google calendar functionality, so deprecating it here
+    //
+    // Settings.findOne({}, function (err, setting) {
+    //   console.log("Setting calendar key");
+    //   console.log(err);
+    //   if (setting) {
+    //     setting.getAccessToken(function (accessToken) {
+    //       google_calendar = new gcal.GoogleCalendar(accessToken);
+    //       console.log(accessToken);
+    //       google_calendar.calendarList.list(function (err, calendarList) {
+    //         var params = {
+    //           start: {
+    //             dateTime: moment(req.body.starttime).format()
+    //           },
+    //           end: {
+    //             dateTime: moment(req.body.endtime).format()
+    //           },
+    //           summary: req.body.title,
+    //           description: req.body.summary
+    //         };
+    //         google_calendar.events.insert(calendarList.items[0].id, params, function (err, calEvent) {
+    //           console.log(calEvent.id)
+    //           newEvent.googleID = calEvent.id;
+    //           newEvent.save();
+    //         });
+    //       });
+    //     })
+    //   }
+    // })
   }
 
   res.redirect('/event');
@@ -152,15 +156,57 @@ exports.postUpdate = function(req, res) {
   var id = req.params.id;
   var mnum = req.body.mnum;
 
+  mnum = mnum.toUpperCase();
+
   Event.findOne({_id:id}, function(err, event) {
-    event.attendees.push(mnum);
-    event.save();
-  });
-
-
-  res.redirect('/event/' + id);
+    if (!err) {
+      Member.findOne({'profile.mnum':mnum}, function(err, member) {
+        if (!err && member) {
+          event.attendees.push(mnum);
+          event.save();
+          res.redirect('/event/' + id);
+        } else {
+          // This code duplicated above in getEvent, for better or worse
+          async.parallel([
+            function(callback){
+                Member.find({'profile.mnum': {$in: event.attendees }}, function(err, members) {
+  
+                  callback(null, members);
+                });
+            },
+            function(callback){
+                Member.find({'profile.mnum': {$in: event.confirmed }}, function(err, members) {
+  
+                  callback(null, members);
+                });
+            }
+          ],function(err, results){
+            // the results array will equal ['one','two'] even though
+            // the second function had a shorter timeout.
+            res.status(400).render('event/detail', {
+              title: "Register for Event",
+              event: event,
+              messages: {
+                errors: [{
+                  msg: "MNumber not found."
+                }]
+              },
+              members: results[0],
+              confirmed: results[1]
+            });
+          });
+        }
+      })
+    } else {
+      // Error looking up the event. This shouldn't happen
+      res.render(404);
+    }
+    
+  }); 
 
 }
+
+
 
 exports.denyAttendance = function(req, res) {
   var id = req.params.id;

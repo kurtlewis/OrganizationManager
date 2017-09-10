@@ -63,9 +63,14 @@ exports.logout = function(req, res) {
  */
 
 exports.getSignup = function(req, res) {
-  res.render('account/signup', {
-    title: 'Create Account'
-  });
+  if (process.env.ADMIN_MODE === 'YES') {
+    res.render('account/signup', {
+      title: 'Create Account'
+    });
+  } else {
+    // signup is disallowed unless admin mode is enabled
+    res.send(403);
+  }
 };
 
 /**
@@ -76,6 +81,11 @@ exports.getSignup = function(req, res) {
  */
 
 exports.postSignup = function(req, res, next) {
+  // disallow creation of the account unless admin mode is enabled
+  if (process.env.ADMIN_MODE !== "YES") {
+    res.send(403);
+    return;
+  }
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -87,7 +97,6 @@ exports.postSignup = function(req, res, next) {
     return res.redirect('/signup');
   }
 
-  console.log(req.body);
 
   var user = new User({
     email: req.body.email,

@@ -1,6 +1,7 @@
 /**
  * Module dependencies.
  */
+require('dotenv').config();
 
 var express = require('express');
 var MongoStore = require('connect-mongo')(express);
@@ -62,8 +63,9 @@ var app = express();
 /**
  * Mongoose configuration.
  */
-console.log("DATABASE: " + process.env.MONGO_URL);
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL, {
+  useMongoClient: true
+});
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
@@ -99,15 +101,15 @@ app.use(express.methodOverride());
 app.use(express.session({
   secret: secrets.sessionSecret,
   store: new MongoStore({
-    url: secrets.db,
+    url: process.env.MONGO_URL,
     auto_reconnect: true
-  }, function(e) {
-    app.listen(app.get('port'), function() {
-      console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
-    });
+  }, function(e) {    
     app.isReady = true;
   })
 }));
+app.listen(app.get('port'), function() {
+  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
+});
 app.use(express.csrf());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -147,8 +149,10 @@ app.get('/member/lookup/:mnum', memberController.postMemberLookup);
 
 app.get('/member/:id', passportConf.isAuthenticated, memberController.getMember);
 app.post('/member/:id', passportConf.isAuthenticated, memberController.addEvent)
-app.del('/member/:id', passportConf.isAuthenticated, memberController.deleteMember);
+app.delete('/member/:id', passportConf.isAuthenticated, memberController.deleteMember);
 
+app.get('/checkhours', memberController.renderCheckHours);
+app.post('/checkhours', memberController.getHours);
 
 app.get('/meeting', meetingController.getMeeting);
 app.get('/meeting/add', passportConf.isAuthenticated, meetingController.getAddMeeting);
@@ -162,7 +166,7 @@ app.post('/event/add', passportConf.isAuthenticated, eventController.postEvent);
 app.get('/event/:id', eventController.getEvent);
 app.post('/event/:id', eventController.postUpdate);
 app.get('/event/:id/edit', passportConf.isAuthenticated, eventController.editEvent);
-app.del('/event/:id', passportConf.isAuthenticated, eventController.deleteEvent);
+app.delete('/event/:id', passportConf.isAuthenticated, eventController.deleteEvent);
 app.get('/event/:id/:mnum/deny', passportConf.isAuthenticated, eventController.denyAttendance)
 app.get('/event/:id/:mnum', passportConf.isAuthenticated, eventController.postConfirmation);
 

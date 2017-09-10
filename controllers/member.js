@@ -79,12 +79,47 @@ exports.deleteMember = function(req, res) {
   console.log("deleting : " + req.params.id);
   var mnum = req.params.id;
   Member.remove({"profile.mnum": mnum}, function(err) {
-    console.log(err);
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      res.send(200);
+    }
   });
 }
 
 exports.getAddMember = function(req, res) {
   res.render('member/add', {
     title: "Add New Member"
+  })
+}
+
+
+exports.renderCheckHours = function(req, res) {
+  res.render('checkhours', {
+    title: "Check Member Hours"
+  })
+}
+
+exports.getHours = function(req, res) {
+  const mnum = req.body.mnum.toUpperCase()
+
+  Member.findOne({"profile.mnum": mnum}, function(err, member) {
+    if (member) {
+      res.render('checkhours', {
+        title: "Check Member Hours",
+        member: member
+      })
+    }
+    else {
+      res.status(400).render('checkhours', {
+        title: "Check Member Hours",
+        messages: {
+          errors: [{
+            msg: "MNumber lookup failed"
+          }]
+        }
+      })
+    }
   })
 }

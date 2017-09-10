@@ -1,9 +1,10 @@
 extends layout
 
 block content
-  a.btn.btn-block.btn-google-plus.btn-social(href='/auth/google')
-    i.fa.fa-google-plus
-    | Integrate with Google Calendar!
+  //- Our use of google calendar is deprecated
+  //- a.btn.btn-block.btn-google-plus.btn-social(href='/auth/google')
+  //-   i.fa.fa-google-plus
+  //-   | Integrate with Google Calendar!
 
   form.form-horizontal(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=token)
@@ -28,26 +29,27 @@ block content
         button.btn.btn-success(type='submit')
           i.fa.fa-check
           | Save
-  legend Danger Zone
-  button.btn.btn-danger(type='submit', id="resetButton")
-    i.fa.fa-times
-    | Reset Hours, Meetings, and Events
+  if showDangerZone == "YES"
+    legend Danger Zone
+    button.btn.btn-danger(type='submit', id="resetButton")
+      i.fa.fa-times
+      | Reset Hours, Meetings, and Events
 
-  script.
-    $(function() {
-      $('#resetButton').on('click', function() {
-          if(confirm("Are you sure you want to reset the system? This CANNOT be undone.")) {
+    script.
+      $(function() {
+        $('#resetButton').on('click', function() {
+            if(confirm("Are you sure you want to reset the system? This CANNOT be undone.")) {
 
-            $.ajax({
-                url: '/reset/',
-                type: 'POST',
-                data: {
-                  _csrf:'#{token}'
-                },
-                success: $.noop,
-                error: $.noop
-            });
-          }
+              $.ajax({
+                  url: '/reset/',
+                  type: 'POST',
+                  data: {
+                    _csrf:'#{token}'
+                  },
+                  success: $.noop,
+                  error: $.noop
+              });
+            }
 
-      })
-    });
+        })
+      });

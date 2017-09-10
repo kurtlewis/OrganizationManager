@@ -5,9 +5,11 @@ var assert = require('chai').assert
 
 var Event = require('../models/Event');
 var Meeting = require('../models/Meeting');
+var Member = require('../models/Member')
+var User = require('../models/User')
 
 var csrf = "";
-
+var mnum = "M04297884";
 
 describe('GET /', function() {
 
@@ -73,13 +75,44 @@ describe('Authentication', function() {
   })
 });
 
-describe('Member CRUD tests', function() {
+describe('Member CRUD (minus delete) tests', function() {
+  it('should render member add page', function(done) {
+    server
+      .get('/member/add')
+      .expect(200, done);
+  })
+
   it('should add a new member', function(done) {
     server
       .post('/member/add')
-      .send({_csrf: csrf, mnum:'M04297884', email: 'backjo@mail.uc.edu', firstName: 'Jonah', lastName: 'Back', major: 'Computer Science'})
+      .send({_csrf: csrf, mnum: mnum, email: 'backjo@mail.uc.edu', firstName: 'Jonah', lastName: 'Back', major: 'Computer Science'})
       .expect(302, done);
   });
+
+  it('should render member page', function(done) {
+    server
+      .get('/member/' + mnum)
+      .expect(200, done);
+  });
+
+  it('should render member list page', function(done) {
+    server
+      .get('/member')
+      .expect(200, done);
+  })
+
+  it('should return check hours page', function(done) {
+    server
+      .get('/checkhours')
+      .expect(200, done);
+  });
+
+  it('should check hours for member', function(done) {
+    server
+      .post('/checkhours')
+      .send({_csrf: csrf, mnum: mnum})
+      .expect(200, done);
+  })
 });
 
 describe('Event CRUD tests', function() {
@@ -109,9 +142,40 @@ describe('Event CRUD tests', function() {
           done();
         })
       })
-
   });
 
+  it('should signup member for event', function(done) {
+    server
+      .post('/event/' + eventID)
+      .send({
+        _csrf:csrf,
+        mnum: mnum
+      })
+      .expect(302, done)
+  })
+
+  it('should return error for event signup', function(done) {
+    server
+      .post('/event/' + eventID)
+      .send({
+        _csrf:csrf,
+        mnum: 'M0BADMNUM'
+      })
+      .expect(400, done)
+  })
+
+  // it('should deny attendance for member', function(done) {
+  //   server
+  //     .post('/event/' + eventID + '/' + mnum + '/deny')
+  //     .send({_csrf:csrf})
+  //     .expect(302, done)
+  // })
+
+  it('should confirm attendance for member', function(done) {
+    server
+      .get('/event/'+ eventID + '/' + mnum)
+      .expect(302, done);
+  })
 
   it('should DELETE event', function(done) {
     server
@@ -156,26 +220,27 @@ describe('Meeting CRUD tests', function() {
 
   });
 
-  it('Should sign into meeting using cardswipe', function(done) {
-    var ISO = "6015899400214891";
-    var mnum = "M04297884";
+  // card swip signin is deprecated
+  // it('Should sign into meeting using cardswipe', function(done) {
+  //   var ISO = "6015899400214891";
+  //   var mnum = "M04297884";
 
-    server
-      .post('/meeting/' + meetingID)
-      .send({
-        _csrf: csrf,
-        iso: ISO
-      })
-      .end(function(err, res) {
-        Meeting.findOne({"_id":meetingID}, function(err, meeting) {
-          if(!meeting || err)
-            return done(err);
-          assert.lengthOf(meeting.attendees,1,'Should be one attendee');
-          assert.equal(meeting.attendees[0], mnum, "Attendee should be swiper");
-          done();
-        })
-      })
-  });
+  //   server
+  //     .post('/meeting/' + meetingID)
+  //     .send({
+  //       _csrf: csrf,
+  //       iso: ISO
+  //     })
+  //     .end(function(err, res) {
+  //       Meeting.findOne({"_id":meetingID}, function(err, meeting) {
+  //         if(!meeting || err)
+  //           return done(err);
+  //         assert.lengthOf(meeting.attendees,1,'Should be one attendee');
+  //         assert.equal(meeting.attendees[0], mnum, "Attendee should be swiper");
+  //         done();
+  //       })
+  //     })
+  // });
 
   it('Should delete meeting', function(done) {
     Meeting.remove({"_id":meetingID}, function(err, meeting) {
@@ -183,7 +248,30 @@ describe('Meeting CRUD tests', function() {
       done();
     });
   })
+});
 
+describe('Do test clean up', function() {
+  it('should delete test member', function(done) {
+    server
+      .del('/member/' + mnum)
+      .send({_csrf:csrf})
+      .end(function(err, res) {
+        Member.findOne({"profile.mnum": mnum}, function(err, member) {
+          if(err || member)
+            return done(err);
+          done();
+        })
+      })
+  })
 
-
+  // This test doesn't really accomplish a whole lot, but it's necessary to clean up after ourselves
+  it('Should remove created test user', function(done) {
+    User.remove({email:'backjo@mail.uc.edu'}, function(err) {
+      if (!err) {
+        done();
+      } else {
+        return done(err);
+      }
+    })
+  })
 });

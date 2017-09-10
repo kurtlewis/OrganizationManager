@@ -56,6 +56,38 @@ exports.postMeeting = function(req,res) {
 exports.postMNum = function(req, res) {
   var id = req.params.id;
   var mnum = req.body.mnum;
+  var errorOccurred = false;
+
+  mnum = mnum.toUpperCase();
+
+  Member.findOne({ 'profile.mnum': mnum }, function (err, member) {
+    if (member) {
+      Meeting.findById(id, function (err, meeting) {
+        if (meeting) {
+          if (meeting.attendees.indexOf(member.profile.mnum) === -1) {
+            member.meetings = member.meetings + 1;
+            member.save();
+
+            meeting.attendees.push(member.profile.mnum);
+            meeting.save();
+            res.redirect('/meeting/' + id);
+          }
+        } else {
+          console.log("test")
+          res.json({error: true, message: "Meeting failed."})
+        }
+      });
+    } else {
+      res.json({ error: true, message: 'Member failed' });
+    }
+  });
+};
+
+
+// This function has been deprecated but I'm keeping it around incase there is ever a decision to go back to using iso's. It should be noted that in the event of an mnum, the lookup should be handled locally on our database instead of querying tribunal.
+exports.postMNumDeprecated = function(req, res) {
+  var id = req.params.id;
+  var mnum = req.body.mnum;
   var iso = req.body.iso;
   var errorOccurred = false;
 
@@ -99,3 +131,4 @@ exports.postMNum = function(req, res) {
     res.json({error:true, message: 'No ISO number given'});
   }
 };
+

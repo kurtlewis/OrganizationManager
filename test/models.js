@@ -41,17 +41,18 @@ describe('User Model', function() {
     });
   });
 
-  it('should delete all users', function(done) {
-    User.remove({}, function(err) {
-      done();
-    })
-  })
-});
+// Disabling the below tests because they clear out real data as well as test data
+//   it('should delete all users', function(done) {
+//     User.remove({}, function(err) {
+//       done();
+//     })
+//   })
+// });
 
-describe('Member Model', function(done) {
-  it('should remove all Members', function(done) {
-    Member.remove({}, function(err) {
-      done();
-    })
-  })
+// describe('Member Model', function(done) {
+//   it('should remove all Members', function(done) {
+//     Member.remove({}, function(err) {
+//       done();
+//     })
+//   })
 });
