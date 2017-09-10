@@ -1,9 +1,10 @@
 extends layout
 
 block content
-  a.btn.btn-block.btn-google-plus.btn-social(href='/auth/google')
-    i.fa.fa-google-plus
-    | Integrate with Google Calendar!
+  //- Our use of google calendar is deprecated
+  //- a.btn.btn-block.btn-google-plus.btn-social(href='/auth/google')
+  //-   i.fa.fa-google-plus
+  //-   | Integrate with Google Calendar!
 
   form.form-horizontal(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=token)
