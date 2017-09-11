@@ -117,36 +117,33 @@ exports.postEvent = function(req,res) {
     });
     newEvent.save();
 
-    //
-    // We don't actually use the google calendar functionality, so deprecating it here
-    //
-    // Settings.findOne({}, function (err, setting) {
-    //   console.log("Setting calendar key");
-    //   console.log(err);
-    //   if (setting) {
-    //     setting.getAccessToken(function (accessToken) {
-    //       google_calendar = new gcal.GoogleCalendar(accessToken);
-    //       console.log(accessToken);
-    //       google_calendar.calendarList.list(function (err, calendarList) {
-    //         var params = {
-    //           start: {
-    //             dateTime: moment(req.body.starttime).format()
-    //           },
-    //           end: {
-    //             dateTime: moment(req.body.endtime).format()
-    //           },
-    //           summary: req.body.title,
-    //           description: req.body.summary
-    //         };
-    //         google_calendar.events.insert(calendarList.items[0].id, params, function (err, calEvent) {
-    //           console.log(calEvent.id)
-    //           newEvent.googleID = calEvent.id;
-    //           newEvent.save();
-    //         });
-    //       });
-    //     })
-    //   }
-    // })
+    Settings.findOne({}, function (err, setting) {
+      console.log("Setting calendar key");
+      console.log(err);
+      if (setting) {
+        setting.getAccessToken(function (accessToken) {
+          google_calendar = new gcal.GoogleCalendar(accessToken);
+          console.log(accessToken);
+          google_calendar.calendarList.list(function (err, calendarList) {
+            var params = {
+              start: {
+                dateTime: moment(req.body.starttime).format()
+              },
+              end: {
+                dateTime: moment(req.body.endtime).format()
+              },
+              summary: req.body.title,
+              description: req.body.summary
+            };
+            google_calendar.events.insert(calendarList.items[0].id, params, function (err, calEvent) {
+              console.log(calEvent.id)
+              newEvent.googleID = calEvent.id;
+              newEvent.save();
+            });
+          });
+        })
+      }
+    })
   }
 
   res.redirect('/event');

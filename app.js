@@ -63,9 +63,7 @@ var app = express();
 /**
  * Mongoose configuration.
  */
-mongoose.connect(process.env.MONGO_URL, {
-  useMongoClient: true
-});
+mongoose.connect(process.env.MONGO_URL);
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
@@ -149,7 +147,7 @@ app.get('/member/lookup/:mnum', memberController.postMemberLookup);
 
 app.get('/member/:id', passportConf.isAuthenticated, memberController.getMember);
 app.post('/member/:id', passportConf.isAuthenticated, memberController.addEvent)
-app.delete('/member/:id', passportConf.isAuthenticated, memberController.deleteMember);
+app.del('/member/:id', passportConf.isAuthenticated, memberController.deleteMember);
 
 app.get('/checkhours', memberController.renderCheckHours);
 app.post('/checkhours', memberController.getHours);
@@ -166,7 +164,7 @@ app.post('/event/add', passportConf.isAuthenticated, eventController.postEvent);
 app.get('/event/:id', eventController.getEvent);
 app.post('/event/:id', eventController.postUpdate);
 app.get('/event/:id/edit', passportConf.isAuthenticated, eventController.editEvent);
-app.delete('/event/:id', passportConf.isAuthenticated, eventController.deleteEvent);
+app.del('/event/:id', passportConf.isAuthenticated, eventController.deleteEvent);
 app.get('/event/:id/:mnum/deny', passportConf.isAuthenticated, eventController.denyAttendance)
 app.get('/event/:id/:mnum', passportConf.isAuthenticated, eventController.postConfirmation);
 
