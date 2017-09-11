@@ -135,11 +135,6 @@ exports.postEvent = function(req,res) {
               summary: req.body.title,
               description: req.body.summary
             };
-            google_calendar.events.insert(calendarList.items[0].id, params, function (err, calEvent) {
-              console.log(calEvent.id)
-              newEvent.googleID = calEvent.id;
-              newEvent.save();
-            });
           });
         })
       }
