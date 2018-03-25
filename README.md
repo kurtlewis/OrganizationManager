@@ -32,6 +32,12 @@ $dokku mongo:export ambassadorsDB > mybackupname.dump.tar
 $dokku mongo:import ambassadorsDB < mybackupname.dump.tar
 ```
 
+## Testing
+Tests are written in the `test` directory - you can run tests with the `npm test` command. Running tests requires a valid database connection.
+### Manual Testing Areas
+There are areas of the project that should be manually tested, especially when relevant code is modified. It's hard to write tests for these areas.
+* TODO
+
 ## Other Notes
 
 ### Admin Mode
