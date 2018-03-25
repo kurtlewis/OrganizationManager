@@ -152,13 +152,30 @@ exports.postUpdate = function(req, res) {
 
   Event.findOne({_id:id}, function(err, event) {
     if (!err) {
+      // Ensure the member hasn't been added already
+      if (event.attendees.includes(mnum)) {
+         
+      } else {
+
+      }
       Member.findOne({'profile.mnum':mnum}, function(err, member) {
+        // Check for no error and that member exists
         if (!err && member) {
-          event.attendees.push(mnum);
-          event.save();
+          // only add member when they have not signed up for event before
+          /* this doesn't output an error - because there's no behavior difference
+           * between signing up for an event you've signed up for before and this.
+           * The end result is that you're listed as an attendee.
+           */
+          if (!event.attendees.includes(mnum)) {
+            // Adds member to event
+            event.attendees.push(mnum);
+            event.save();
+          }
+          // redirects to the event page - must redirect so that render attendees/confirmed code is hit
           res.redirect('/event/' + id);
         } else {
           // This code duplicated above in getEvent, for better or worse
+          // This code builds the list of members signed up for the event / confirmed
           async.parallel([
             function(callback){
                 Member.find({'profile.mnum': {$in: event.attendees }}, function(err, members) {
