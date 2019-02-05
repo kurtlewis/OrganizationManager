@@ -1,6 +1,7 @@
 # Deprecated
-This repository is no longer maintined. [Visit this repository for the source
-code behind the new ambassadors website](https://github.com/kurtlewi/ceas-ambassadors-website).
+<b>This repository is no longer maintained. [Visit this repository for the source
+code behind the new ambassadors website](https://github.com/kurtlewi/ceas-ambassadors-website).</b>
+
 Organization Manager
 =================
 A basic system for managing student organizations. Built for use at UC.
