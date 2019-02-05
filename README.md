@@ -1,6 +1,6 @@
 # Deprecated
 <b>This repository is no longer maintained. [Visit this repository for the source
-code behind the new ambassadors website](https://github.com/kurtlewi/ceas-ambassadors-website).</b>
+code behind the new ambassadors website](https://github.com/kurtlewis/ceas-ambassadors-website).</b>
 
 Organization Manager
 =================
